@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixator.Api", "Pixator.Api\Pixator.Api.csproj", "{D58322B1-D296-4DAB-A98E-914B7476D73A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{00B3553A-12CA-426F-8A0B-D053FBF878FE}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\AzureVMPublishModule.psm1 = PublishScripts\AzureVMPublishModule.psm1
+		PublishScripts\Publish-WebApplicationVM.ps1 = PublishScripts\Publish-WebApplicationVM.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{2240F58E-95CD-437C-A9AA-A0ED01728E3A}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Configurations\PixatorApi-WAWS-dev.json = PublishScripts\Configurations\PixatorApi-WAWS-dev.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D58322B1-D296-4DAB-A98E-914B7476D73A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D58322B1-D296-4DAB-A98E-914B7476D73A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D58322B1-D296-4DAB-A98E-914B7476D73A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D58322B1-D296-4DAB-A98E-914B7476D73A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2240F58E-95CD-437C-A9AA-A0ED01728E3A} = {00B3553A-12CA-426F-8A0B-D053FBF878FE}
+	EndGlobalSection
+EndGlobal
