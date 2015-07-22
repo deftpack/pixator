@@ -37,23 +37,24 @@ namespace Pixator.Api.Controllers
 
             var columnColors = columnWidths.Select(cw => Color.FromArgb(randomGenerator.Next(255), randomGenerator.Next(255), randomGenerator.Next(255))).ToArray();
 
-            var horizontalCursor = 0;
-            for(var i = 0; i < columnWidths.Count; i++)
-            {
-                var currentColor = columnColors[i];
-                var previousColor = columnColors[i == 0 ? 0 : i - 1];
-                var nextColor = columnColors[i + 1 == columnColors.Length ? i : i + 1];
-                var graphicsPath = new GraphicsPath();
-                graphicsPath.AddRectangle(new Rectangle(0, 0, columnWidths[i], height));
-                var brush = new PathGradientBrush(graphicsPath);
-                var colorBlend = new ColorBlend();
-                colorBlend.Colors = new[] { previousColor, currentColor, nextColor };
-                colorBlend.Positions = new[] { 0.1f, 0.5f, 0.9f };
-                brush.InterpolationColors = colorBlend;
-                graphics.TranslateTransform(horizontalCursor, 0);
-                graphics.FillPath(brush, graphicsPath);
-                horizontalCursor += columnWidths[i];
-            }
+            //var horizontalCursor = 0;
+            //for(var i = 0; i < columnWidths.Count; i++)
+            //{
+            //    var currentColor = columnColors[i];
+            //    var previousColor = columnColors[i == 0 ? 0 : i - 1];
+            //    var nextColor = columnColors[i + 1 == columnColors.Length ? i : i + 1];
+            var rectangle = new Rectangle(0, 0, width, height);
+            var graphicsPath = new GraphicsPath();
+            graphicsPath.AddEllipse(rectangle);
+            var brush = new PathGradientBrush(graphicsPath);
+            brush.CenterPoint = new PointF(rectangle.Width / 2, rectangle.Height / 2);
+            brush.CenterColor = Color.White;
+            brush.SurroundColors = columnColors;
+            brush.SetBlendTriangularShape(0.5f, 1.0f);
+            brush.FocusScales = new PointF(0, 0);
+            graphics.FillPath(brush, graphicsPath);
+            //    horizontalCursor += columnWidths[i];
+            //}
 
             var imageStream = new MemoryStream();
             image.Save(imageStream, ImageFormat.Png);
