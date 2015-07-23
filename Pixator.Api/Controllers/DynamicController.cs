@@ -14,8 +14,8 @@ namespace Pixator.Api.Controllers
 {
     public class DynamicController : ApiController
     {
-        const int minColumnNumber = 3;
-        const int maxColumnNumber = 20;
+        //const int minColumnNumber = 30;
+        //const int maxColumnNumber = 200;
 
         public IEnumerable<string> Get()
         {
@@ -24,6 +24,8 @@ namespace Pixator.Api.Controllers
 
         public HttpResponseMessage Get(int width, int height, int seed)
         {
+            var minColumnNumber = width / 5;
+            var maxColumnNumber = width / 2;
             var randomGenerator = new Random(seed);
             var image = new Bitmap(width, height);
             var graphics = Graphics.FromImage(image);
@@ -35,26 +37,28 @@ namespace Pixator.Api.Controllers
                 columnWidths.Add(columnWidths.Sum() + nextColumnWidth > width || columnWidths.Count + 1 == maxColumnNumber ? width - columnWidths.Sum() : nextColumnWidth);
             }
 
-            var columnColors = columnWidths.Select(cw => Color.FromArgb(randomGenerator.Next(255), randomGenerator.Next(255), randomGenerator.Next(255))).ToArray();
+            var columnColors = Enumerable.Range(0, columnWidths.Count + 1).Select(cw =>
+                Color.FromArgb(randomGenerator.Next(255), randomGenerator.Next(255), randomGenerator.Next(255))).ToArray();
 
-            //var horizontalCursor = 0;
-            //for(var i = 0; i < columnWidths.Count; i++)
-            //{
-            //    var currentColor = columnColors[i];
-            //    var previousColor = columnColors[i == 0 ? 0 : i - 1];
-            //    var nextColor = columnColors[i + 1 == columnColors.Length ? i : i + 1];
+            var horizontalCursor = 0;
             var rectangle = new Rectangle(0, 0, width, height);
             var graphicsPath = new GraphicsPath();
-            graphicsPath.AddEllipse(rectangle);
-            var brush = new PathGradientBrush(graphicsPath);
-            brush.CenterPoint = new PointF(rectangle.Width / 2, rectangle.Height / 2);
-            brush.CenterColor = Color.White;
-            brush.SurroundColors = columnColors;
-            brush.SetBlendTriangularShape(0.5f, 1.0f);
-            brush.FocusScales = new PointF(0, 0);
+            graphicsPath.AddRectangle(rectangle);
+            var brush = new LinearGradientBrush(rectangle, Color.Black, Color.Black, 0, false);
+            var colorBlend = new ColorBlend(columnColors.Length);
+            colorBlend.Colors = columnColors;
+            var positions = new List<float> { 0f };
+            positions.AddRange(columnWidths.Select(x =>
+            {
+                horizontalCursor += x;
+                return (float)horizontalCursor / width;
+            }));
+            colorBlend.Positions = positions.ToArray();
+
+            brush.InterpolationColors = colorBlend;
+            var roygbiv = new { Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo, Color.Violet };
+
             graphics.FillPath(brush, graphicsPath);
-            //    horizontalCursor += columnWidths[i];
-            //}
 
             var imageStream = new MemoryStream();
             image.Save(imageStream, ImageFormat.Png);
